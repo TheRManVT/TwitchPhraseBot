@@ -191,18 +191,6 @@ The bot responds differently based on what you say when mentioning it:
 - **No replies**: Triggered by words like "no", "nope", "nah", "disagree", "wrong"
 - **Generic replies**: When mentioned without yes/no keywords
 
-### Docker Network
-
-By default, the bot connects to an external network called `npm_npm`. If you want to use a different network or create a new one:
-
-```yaml
-networks:
-  your_network_name:
-    external: true  # For existing networks
-    # OR
-    driver: bridge  # To create a new network
-```
-
 ## Project Structure
 
 ```
