@@ -1,6 +1,6 @@
 # Twitch Random Phrase Bot
 
-A customizable Twitch chatbot that adds random phrases to chat messages after a random number of messages, inspired by the popular **InBedBot**.
+A customizable Twitch chatbot that adds random phrases to chat messages after a random number of messages, inspired by the popular **[InBedBot](https://www.twitch.tv/inbedbot)**.
 
 ## Features
 
