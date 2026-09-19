@@ -177,6 +177,36 @@ class PhraseBot(commands.Bot):
         logger.info(f"Bot mentioned without yes/no: {message.content}")
         response = random.choice(self.generic_mention_responses)
         await message.channel.send(f"@{message.author.name} {response}")
+
+    @staticmethod
+    def split_into_messages(items, prefix="", separator=", ", limit=500):
+        """
+        Joins items into messages of at most `limit` characters.
+        An item is never cut in half; if it doesn't fit, it moves to the next message.
+        The prefix is only added to the first message.
+        """
+        messages = []
+        current = prefix
+        has_items = False
+
+        for item in items:
+            item = item.strip()
+            candidate = current + (separator if has_items else "") + item
+
+            if len(candidate) <= limit:
+                current = candidate
+                has_items = True
+            else:
+                if has_items:
+                    messages.append(current)
+                # Start a new message with this item (safety cut if a single item is > limit)
+                current = item[:limit]
+                has_items = True
+
+        if has_items:
+            messages.append(current)
+
+        return messages
     
     @commands.command(name='phrasestats')
     async def phrase_stats(self, ctx):
@@ -186,9 +216,16 @@ class PhraseBot(commands.Bot):
     
     @commands.command(name='phrases')
     async def list_phrases(self, ctx):
-        """Lists all possible phrases"""
-        phrase_list = ', '.join(self.phrases)
-        await ctx.send(f"Possible phrases: {phrase_list}")
+        """Lists all possible phrases (split into multiple messages if needed)"""
+        messages = self.split_into_messages(
+            self.phrases,
+            prefix="Possible phrases: ",
+            limit=500
+        )
+
+        for msg in messages:
+            await ctx.send(msg)
+            await asyncio.sleep(1)  # small delay to avoid Twitch rate limits / spam filters
 
 if __name__ == "__main__":
     bot = PhraseBot()
